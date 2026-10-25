@@ -1,0 +1,62 @@
+warning: in the working copy of 'blog/admin.py', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'blog/models.py', CRLF will be replaced by LF the next time Git touches it
+[1mdiff --git a/blog/__pycache__/admin.cpython-312.pyc b/blog/__pycache__/admin.cpython-312.pyc[m
+[1mindex dc7df60..35be5e7 100644[m
+Binary files a/blog/__pycache__/admin.cpython-312.pyc and b/blog/__pycache__/admin.cpython-312.pyc differ
+[1mdiff --git a/blog/__pycache__/models.cpython-312.pyc b/blog/__pycache__/models.cpython-312.pyc[m
+[1mindex c36cad3..7a5c5f0 100644[m
+Binary files a/blog/__pycache__/models.cpython-312.pyc and b/blog/__pycache__/models.cpython-312.pyc differ
+[1mdiff --git a/blog/admin.py b/blog/admin.py[m
+[1mindex a389861..1811503 100644[m
+[1m--- a/blog/admin.py[m
+[1m+++ b/blog/admin.py[m
+[36m@@ -4,6 +4,9 @@[m [mfrom django.contrib import admin[m
+ [m
+ from .models import Post[m
+ [m
+[32m+[m[32mfrom .models import Comment[m
+[32m+[m
+ # Register your models here.[m
+ admin.site.register(Post)[m
+[32m+[m[32madmin.site.register(Comment)[m
+ [m
+[1mdiff --git a/blog/models.py b/blog/models.py[m
+[1mindex 33d87b2..839476d 100644[m
+[1m--- a/blog/models.py[m
+[1m+++ b/blog/models.py[m
+[36m@@ -9,6 +9,9 @@[m [mSTATUS = ((0, "Draft"), (1, "Published"))[m
+ # Create your models here.[m
+ [m
+ class Post(models.Model):[m
+[32m+[m
+[32m+[m[41m  [m
+[32m+[m[41m    [m
+     title = models.CharField(max_length=200, unique=True)[m
+     slug = models.SlugField(max_length=200, unique=True)[m
+     author = models.ForeignKey([m
+[36m@@ -21,6 +24,13 @@[m [mclass Post(models.Model):[m
+     excerpt = models.TextField(blank=True)[m
+ [m
+ [m
+[32m+[m[32m    class Meta:[m
+[32m+[m[32m        ordering = ["-created_on"][m
+[32m+[m
+[32m+[m[32m    def __str__(self):[m
+[32m+[m[32m        return f"{self.title} | {self.author}"[m
+[32m+[m
+[32m+[m
+ class Comment(models.Model):[m
+     post = models.ForeignKey([m
+         Post, on_delete=models.CASCADE, related_name="comments"[m
+[36m@@ -31,3 +41,11 @@[m [mclass Comment(models.Model):[m
+     body = models.TextField()[m
+     approved = models.BooleanField(default=False)[m
+     created_on = models.DateTimeField(auto_now_add=True)[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m[32m    class Meta:[m
+[32m+[m[32m        ordering = ["-created_on"][m
+[32m+[m
+[32m+[m[32m    def __str__(self):[m
+[32m+[m[32m        return f"Comment {self.body} by {self.author}"[m
